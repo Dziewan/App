@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.coderion.app.panels.AddBoardPanel">
+
+
+    <TextView
+        android:id="@+id/materialLabelABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageABP"
+        android:layout_marginStart="8dp"
+        android:text="Materiał"
+        app:layout_constraintBottom_toTopOf="@+id/materialABP"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/materialABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/materialLabelABP"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/sizeLabelABP"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/sizeLabelABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sizeABP"
+        android:layout_alignStart="@+id/sizeABP"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Wymiar"
+        app:layout_constraintBottom_toTopOf="@+id/sizeABP"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/sizeABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/thicknessABP"
+        android:layout_alignStart="@+id/thicknessLabelABP"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/thicknessLabelABP"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/thicknessLabelABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/materialLabelABP"
+        android:layout_below="@+id/sizeABP"
+        android:layout_marginBottom="8dp"
+        android:text="Grubość"
+        app:layout_constraintBottom_toTopOf="@+id/thicknessABP"
+        app:layout_constraintStart_toStartOf="@+id/sizeABP" />
+
+
+
+    <EditText
+        android:id="@+id/thicknessABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addABP"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="number|numberSigned|numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/placeLabelABP"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/placeLabelABP"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_alignStart="@+id/thicknessLabelABP"
+        android:layout_below="@+id/thicknessABP"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Miejsce w regale"
+        app:layout_constraintBottom_toTopOf="@+id/placeABP"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/placeABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/placeLabelABP"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <Button
+        android:id="@+id/addABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/placeABP"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/imageABP"
+        android:text="Dodaj"
+        app:layout_constraintBottom_toBottomOf="@+id/placeABP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/placeABP"
+        app:layout_constraintTop_toTopOf="@+id/placeABP" />
+
+    <ImageButton
+        android:id="@+id/imageABP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:maxHeight="180dp"
+        android:maxWidth="256dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/materialLabelABP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.436"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/camera" />
+
+</android.support.constraint.ConstraintLayout>
