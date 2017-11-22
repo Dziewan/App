@@ -25,9 +25,15 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
     Board board;
     byte[] imageArray;
     String operation;
+    List<Long> ids;
 
     public RestService(String operation) {
         this.operation = operation;
+    }
+
+    public RestService(List<Long> ids, String operation) {
+        this.operation = operation;
+        this.ids = ids;
     }
 
     public RestService(Board board, byte[] imageArray, String operation) {
@@ -71,6 +77,12 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
                     response = addPlyta(restTemplate, url, HttpMethod.POST, entity);
                     break;
                 }
+                case Values.DELETE_BY_ID: {
+                    ExtendedBoard extendedBoard = new ExtendedBoard(ids);
+                    HttpEntity<ExtendedBoard> entity = new HttpEntity<>(extendedBoard, headers);
+                    response = deleteById(restTemplate, url, HttpMethod.DELETE, entity);
+                    break;
+                }
             }
 
             return response;
@@ -92,5 +104,9 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
 
     public ResponseEntity<Board> addPlyta(RestTemplate restTemplate, String url, HttpMethod method, HttpEntity entity) {
         return restTemplate.exchange(url, method, entity, Board.class);
+    }
+
+    public ResponseEntity deleteById(RestTemplate restTemplate, String url, HttpMethod method, HttpEntity entity) {
+        return restTemplate.exchange(url, method, entity, Void.class);
     }
 }

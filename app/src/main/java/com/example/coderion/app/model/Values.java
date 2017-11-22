@@ -9,4 +9,5 @@ public interface Values {
     String ADD_NEW_BOARD = "addNew";
     String FIND_BY_ID = "getById";
     String FIND_ALL = "getAll";
+    String DELETE_BY_ID = "deleteById";
 }
