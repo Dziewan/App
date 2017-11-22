@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.coderion.app.model.Board;
 import com.example.coderion.app.model.ExtendedBoard;
+import com.example.coderion.app.model.Values;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -54,17 +55,17 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
             ResponseEntity<?> response = null;
 
             switch (operation) {
-                case "getAll": {
+                case Values.FIND_ALL: {
                     HttpEntity entity = new HttpEntity<>(headers);
                     response = getAllSlabs(restTemplate, url, HttpMethod.GET, entity);
                     break;
                 }
-                case "getById": {
+                case Values.FIND_BY_ID: {
                     HttpEntity entity = new HttpEntity<>(headers);
                     response = getSlabById(restTemplate, url, HttpMethod.GET, entity);
                     break;
                 }
-                case "addNew": {
+                case Values.ADD_NEW_BOARD: {
                     ExtendedBoard extendedBoard = new ExtendedBoard(board, imageArray);
                     HttpEntity<ExtendedBoard> entity = new HttpEntity<>(extendedBoard, headers);
                     response = addPlyta(restTemplate, url, HttpMethod.POST, entity);
