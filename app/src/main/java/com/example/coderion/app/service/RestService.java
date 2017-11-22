@@ -55,13 +55,12 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
 
             switch (operation) {
                 case "getAll": {
-                    HttpEntity<Board> entity = new HttpEntity<>(headers);
+                    HttpEntity entity = new HttpEntity<>(headers);
                     response = getAllSlabs(restTemplate, url, HttpMethod.GET, entity);
                     break;
                 }
                 case "getById": {
-                    ExtendedBoard extendedBoard = new ExtendedBoard(board, imageArray);
-                    HttpEntity<ExtendedBoard> entity = new HttpEntity<>(extendedBoard, headers);
+                    HttpEntity entity = new HttpEntity<>(headers);
                     response = getSlabById(restTemplate, url, HttpMethod.GET, entity);
                     break;
                 }
