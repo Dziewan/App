@@ -87,6 +87,36 @@ public class StockPanel extends AppCompatActivity {
         });
     }
 
+    private void refreshStock() {
+        List<Board> boardsList = null;
+        try {
+            boardsList = (List<Board>) new RestService(Values.FIND_ALL).execute(Values.MAIN_LINK).get().getBody();
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), "Nie udało się załadować płyt", Toast.LENGTH_SHORT).show();
+            System.out.println(e.getMessage());
+        }
+        boardList.setAdapter(new StockAdapter(getBaseContext(), R.layout.board_layout, boardsList));
+    }
+
+    private void deleteBoards() {
+        HttpStatus status = null;
+        try {
+            status = new RestService(ids, Values.DELETE_BY_ID).execute(Values.MAIN_LINK+"delete").get().getStatusCode();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
+        }
+        if (HttpStatus.OK.equals(status)) {
+            refreshStock();
+            checked.clear();
+            ids.clear();
+            Toast.makeText(getBaseContext(), "Usunięto zaznaczone płyty", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class StockAdapter extends ArrayAdapter<Board> {
 
         private int layout;
@@ -143,11 +173,7 @@ public class StockPanel extends AppCompatActivity {
             viewHolder.check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (viewHolder.check.isChecked()) {
-                        checked.put(boards.get(position).getId(), true);
-                    } else {
-                        checked.put(boards.get(position).getId(), false);
-                    }
+                    checked.put(boards.get(position).getId(), viewHolder.check.isChecked());
                 }
             });
 
@@ -164,33 +190,5 @@ public class StockPanel extends AppCompatActivity {
         TextView material, size, thickness, place;
         CheckBox check;
         TableRow tableRow;
-    }
-
-    private void refreshStock() {
-        List<Board> boardsList = null;
-        try {
-            boardsList = (List<Board>) new RestService(Values.FIND_ALL).execute(Values.MAIN_LINK).get().getBody();
-        } catch (Exception e) {
-            Toast.makeText(getBaseContext(), "Nie udało się załadować płyt", Toast.LENGTH_SHORT).show();
-            System.out.println(e.getMessage());
-        }
-        boardList.setAdapter(new StockAdapter(getBaseContext(), R.layout.board_layout, boardsList));
-    }
-
-    private void deleteBoards() {
-        HttpStatus status = null;
-        try {
-            status = new RestService(ids, Values.DELETE_BY_ID).execute(Values.MAIN_LINK+"delete").get().getStatusCode();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
-        }
-        if (HttpStatus.OK.equals(status)) {
-            refreshStock();
-            Toast.makeText(getBaseContext(), "Usunięto zaznaczone płyty", Toast.LENGTH_SHORT).show();
-        }
     }
 }
