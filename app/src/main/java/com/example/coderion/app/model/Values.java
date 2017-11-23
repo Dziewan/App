@@ -5,7 +5,7 @@ package com.example.coderion.app.model;
  */
 
 public interface Values {
-    String MAIN_LINK = "http://172.17.0.1:8080/md/api/main/";
+    String MAIN_LINK = "http://dziewanowski.coderion.eu/md/api/main/";
     String ADD_NEW_BOARD = "addNew";
     String FIND_BY_ID = "getById";
     String FIND_ALL = "getAll";
