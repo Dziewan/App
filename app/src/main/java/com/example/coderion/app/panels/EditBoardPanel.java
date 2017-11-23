@@ -61,7 +61,7 @@ public class EditBoardPanel extends AddBoardPanel implements ImageConverter {
         });
 
         try {
-            extendedBoard = (ExtendedBoard) new RestService(Values.FIND_BY_ID).execute(Values.MAIN_LINK+"/"+ID).get().getBody();
+            extendedBoard = (ExtendedBoard) new RestService(Values.FIND_BY_ID).execute(Values.MAIN_LINK+ID).get().getBody();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Nie udało się znaleźć płyty", Toast.LENGTH_SHORT);

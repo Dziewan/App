@@ -21,11 +21,17 @@ import android.widget.Toast;
 
 import com.example.coderion.app.R;
 import com.example.coderion.app.model.Board;
+import com.example.coderion.app.model.ExtendedBoard;
 import com.example.coderion.app.model.Values;
 import com.example.coderion.app.service.RestService;
 
+import org.springframework.http.HttpStatus;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by coderion on 20.11.17.
@@ -40,6 +46,8 @@ public class StockPanel extends AppCompatActivity {
     TextView thicknessLabel;
     TextView sizeLabel;
     TextView placeLabel;
+    Map<Long, Boolean> checked;
+    List<Long> ids;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +61,8 @@ public class StockPanel extends AppCompatActivity {
         thicknessLabel = findViewById(R.id.thicknessSP);
         sizeLabel = findViewById(R.id.sizeSP);
         placeLabel = findViewById(R.id.placeSP);
+        checked = new HashMap<>();
+        ids = new ArrayList<>();
 
         materialLabel.setTextColor(Color.BLACK);
         sizeLabel.setTextColor(Color.BLACK);
@@ -62,14 +72,17 @@ public class StockPanel extends AppCompatActivity {
         showStock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Board> boardsList = null;
-                try {
-                    boardsList = (List<Board>) new RestService(Values.FIND_ALL).execute(Values.MAIN_LINK).get().getBody();
-                } catch (Exception e) {
-                    Toast.makeText(getBaseContext(), "Nie udało się znaleźć płyty", Toast.LENGTH_SHORT).show();
-                    System.out.println(e.getMessage());
+                refreshStock();
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Long key : checked.keySet()) {
+                    if (checked.get(key)) ids.add(key);
                 }
-                boardList.setAdapter(new StockAdapter(getBaseContext(), R.layout.board_layout, boardsList));
+                deleteBoards();
             }
         });
     }
@@ -110,6 +123,7 @@ public class StockPanel extends AppCompatActivity {
                 viewHolder.size = convertView.findViewById(R.id.sizeViewSP);
                 viewHolder.place = convertView.findViewById(R.id.placeViewSP);
                 viewHolder.tableRow = convertView.findViewById(R.id.tableRowSP);
+                viewHolder.check = convertView.findViewById(R.id.checkBoxSP);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -125,6 +139,18 @@ public class StockPanel extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
+
+            viewHolder.check.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (viewHolder.check.isChecked()) {
+                        checked.put(boards.get(position).getId(), true);
+                    } else {
+                        checked.put(boards.get(position).getId(), false);
+                    }
+                }
+            });
+
             viewHolder.material.setText(boards.get(position).getMaterial());
             viewHolder.thickness.setText(""+boards.get(position).getThickness());
             viewHolder.size.setText(boards.get(position).getSize());
@@ -138,5 +164,33 @@ public class StockPanel extends AppCompatActivity {
         TextView material, size, thickness, place;
         CheckBox check;
         TableRow tableRow;
+    }
+
+    private void refreshStock() {
+        List<Board> boardsList = null;
+        try {
+            boardsList = (List<Board>) new RestService(Values.FIND_ALL).execute(Values.MAIN_LINK).get().getBody();
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), "Nie udało się załadować płyt", Toast.LENGTH_SHORT).show();
+            System.out.println(e.getMessage());
+        }
+        boardList.setAdapter(new StockAdapter(getBaseContext(), R.layout.board_layout, boardsList));
+    }
+
+    private void deleteBoards() {
+        HttpStatus status = null;
+        try {
+            status = new RestService(ids, Values.DELETE_BY_ID).execute(Values.MAIN_LINK+"delete").get().getStatusCode();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
+        }
+        if (HttpStatus.OK.equals(status)) {
+            refreshStock();
+            Toast.makeText(getBaseContext(), "Usunięto zaznaczone płyty", Toast.LENGTH_SHORT).show();
+        }
     }
 }
