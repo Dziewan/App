@@ -87,26 +87,7 @@ public class AddBoardPanel extends AppCompatActivity implements ImageConverter {
         if (!validationResponse.isEmpty()) {
             Toast.makeText(getApplicationContext(), validationResponse.get(0), Toast.LENGTH_LONG).show();
         } else {
-            Board plyta = new Board();
-            plyta.setMaterial(material.getText().toString());
-            plyta.setSize(size.getText().toString());
-            plyta.setThickness(Double.valueOf(thickness.getText().toString()));
-            plyta.setPlace(place.getText().toString());
-            plyta.setImage(hasImage);
-
-            byte[] array = encode(((BitmapDrawable) image.getDrawable()).getBitmap());
-            HttpStatus httpStatus = null;
-            try {
-                httpStatus = new RestService(plyta, array, Values.ADD_NEW_BOARD).execute(Values.MAIN_LINK).get().getStatusCode();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Nie udało się dodać płyty", Toast.LENGTH_SHORT);
-            }
-            if (HttpStatus.CREATED.equals(httpStatus)) {
-                Toast.makeText(this, "Płyta zapisana", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Nie udało się dodać płyty", Toast.LENGTH_LONG).show();
-            }
+            addNewBoard();
         }
     }
 
@@ -185,5 +166,28 @@ public class AddBoardPanel extends AppCompatActivity implements ImageConverter {
     @Override
     public Bitmap decode(byte[] array) {
         return BitmapFactory.decodeByteArray(array, 0, array.length);
+    }
+
+    public void addNewBoard() {
+        Board plyta = new Board();
+        plyta.setMaterial(material.getText().toString());
+        plyta.setSize(size.getText().toString());
+        plyta.setThickness(Double.valueOf(thickness.getText().toString()));
+        plyta.setPlace(place.getText().toString());
+        plyta.setImage(hasImage);
+
+        byte[] array = encode(((BitmapDrawable) image.getDrawable()).getBitmap());
+        HttpStatus httpStatus = null;
+        try {
+            httpStatus = new RestService(plyta, array, Values.ADD_NEW_BOARD).execute(Values.MAIN_LINK).get().getStatusCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Nie udało się dodać płyty", Toast.LENGTH_SHORT);
+        }
+        if (HttpStatus.CREATED.equals(httpStatus)) {
+            Toast.makeText(this, "Płyta zapisana", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Nie udało się dodać płyty", Toast.LENGTH_LONG).show();
+        }
     }
 }

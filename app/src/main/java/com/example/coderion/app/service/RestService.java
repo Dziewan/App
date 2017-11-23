@@ -78,9 +78,8 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
                     break;
                 }
                 case Values.DELETE_BY_ID: {
-                    ExtendedBoard extendedBoard = new ExtendedBoard(ids);
-                    HttpEntity<ExtendedBoard> entity = new HttpEntity<>(extendedBoard, headers);
-                    response = deleteById(restTemplate, url, HttpMethod.DELETE, entity);
+                    HttpEntity<List<Long>> entity = new HttpEntity<>(ids, headers);
+                    response = deleteById(restTemplate, url, HttpMethod.POST, entity);
                     break;
                 }
             }
@@ -106,7 +105,7 @@ public class RestService extends AsyncTask<String, Void, ResponseEntity<?>> {
         return restTemplate.exchange(url, method, entity, Board.class);
     }
 
-    public ResponseEntity deleteById(RestTemplate restTemplate, String url, HttpMethod method, HttpEntity entity) {
-        return restTemplate.exchange(url, method, entity, Void.class);
+    public ResponseEntity<Board> deleteById(RestTemplate restTemplate, String url, HttpMethod method, HttpEntity entity) {
+        return restTemplate.exchange(url, method, entity, Board.class);
     }
 }

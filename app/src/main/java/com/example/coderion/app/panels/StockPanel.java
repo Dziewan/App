@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by coderion on 20.11.17.
@@ -71,14 +72,7 @@ public class StockPanel extends AppCompatActivity {
         showStock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Board> boardsList = null;
-                try {
-                    boardsList = (List<Board>) new RestService(Values.FIND_ALL).execute(Values.MAIN_LINK).get().getBody();
-                } catch (Exception e) {
-                    Toast.makeText(getBaseContext(), "Nie udało się znaleźć płyty", Toast.LENGTH_SHORT).show();
-                    System.out.println(e.getMessage());
-                }
-                boardList.setAdapter(new StockAdapter(getBaseContext(), R.layout.board_layout, boardsList));
+                refreshStock();
             }
         });
 
@@ -88,18 +82,7 @@ public class StockPanel extends AppCompatActivity {
                 for (Long key : checked.keySet()) {
                     if (checked.get(key)) ids.add(key);
                 }
-
-                HttpStatus status = null;
-                try {
-                    status = new RestService(ids, Values.DELETE_BY_ID).execute(Values.MAIN_LINK+"/delete").get().getStatusCode();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-                if (HttpStatus.OK.equals(status)) {
-                    Toast.makeText(getBaseContext(), "Usunięto zaznaczone płyty", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
-                }
+                deleteBoards();
             }
         });
     }
@@ -181,5 +164,33 @@ public class StockPanel extends AppCompatActivity {
         TextView material, size, thickness, place;
         CheckBox check;
         TableRow tableRow;
+    }
+
+    private void refreshStock() {
+        List<Board> boardsList = null;
+        try {
+            boardsList = (List<Board>) new RestService(Values.FIND_ALL).execute(Values.MAIN_LINK).get().getBody();
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), "Nie udało się załadować płyt", Toast.LENGTH_SHORT).show();
+            System.out.println(e.getMessage());
+        }
+        boardList.setAdapter(new StockAdapter(getBaseContext(), R.layout.board_layout, boardsList));
+    }
+
+    private void deleteBoards() {
+        HttpStatus status = null;
+        try {
+            status = new RestService(ids, Values.DELETE_BY_ID).execute(Values.MAIN_LINK+"delete").get().getStatusCode();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "Operacja nie powiodła się", Toast.LENGTH_SHORT).show();
+        }
+        if (HttpStatus.OK.equals(status)) {
+            refreshStock();
+            Toast.makeText(getBaseContext(), "Usunięto zaznaczone płyty", Toast.LENGTH_SHORT).show();
+        }
     }
 }
