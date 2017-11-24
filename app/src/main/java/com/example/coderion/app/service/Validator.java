@@ -34,6 +34,6 @@ public class Validator {
                 nieLiczba = true;
             }
         }
-        if (x != 1 || nieLiczba) odpowiedz.add("Błędne dane w wymiarze");
+        if (x != 1 || nieLiczba) odpowiedz.add("Błędny format wymiaru\nPrzykład: 2000x1000");
     }
 }
