@@ -7,9 +7,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.coderion.app.R;
@@ -22,22 +25,26 @@ import com.example.coderion.app.service.Validator;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by coderion on 20.11.17.
  */
 
-public class EditBoardPanel extends AddBoardPanel implements ImageConverter {
+public class EditBoardPanel extends AddBoardPanel implements ImageConverter, AdapterView.OnItemSelectedListener {
 
+    List<String> categoriesEdit = new ArrayList<>(Arrays.asList("Tekstolit", "Gips", "Kupa"));
     Button save;
     ImageButton imageEdit;
-    EditText materialEdit;
+    Spinner materialEdit;
     EditText sizeEdit;
     EditText thicknessEdit;
     EditText placeEdit;
     Long ID;
     ExtendedBoard extendedBoard;
+    String itemEdit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +60,9 @@ public class EditBoardPanel extends AddBoardPanel implements ImageConverter {
         placeEdit = findViewById(R.id.placeABP);
         save.setText("Zapisz");
 
+        materialEdit.setOnItemSelectedListener(this);
+        addItemsOnSpinner();
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,9 +76,13 @@ public class EditBoardPanel extends AddBoardPanel implements ImageConverter {
             e.printStackTrace();
             Toast.makeText(this, "Nie udało się znaleźć płyty", Toast.LENGTH_SHORT);
         }
-
+        int pos = 0;
+        for (String x : categoriesEdit) {
+            if (extendedBoard.getBoard().getMaterial().equals(x)) break;
+            ++pos;
+        }
         if (extendedBoard.getImg() != null) imageEdit.setImageBitmap(decode(extendedBoard.getImg()));
-        materialEdit.setText(extendedBoard.getBoard().getMaterial());
+        materialEdit.setSelection(pos);
         sizeEdit.setText(extendedBoard.getBoard().getSize());
         thicknessEdit.setText(extendedBoard.getBoard().getThickness()+"");
         placeEdit.setText(extendedBoard.getBoard().getPlace());
@@ -88,7 +102,7 @@ public class EditBoardPanel extends AddBoardPanel implements ImageConverter {
             Toast.makeText(this, validatorResponse.get(0), Toast.LENGTH_LONG).show();
         } else {
             Board board = new Board();
-            board.setMaterial(materialEdit.getText().toString());
+            board.setMaterial(itemEdit);
             board.setSize(sizeEdit.getText().toString());
             board.setThickness(Double.valueOf(thicknessEdit.getText().toString()));
             board.setPlace(placeEdit.getText().toString());
@@ -138,5 +152,21 @@ public class EditBoardPanel extends AddBoardPanel implements ImageConverter {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         imageEdit.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        itemEdit = adapterView.getItemAtPosition(i).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
+
+    private void addItemsOnSpinner() {
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categoriesEdit);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        materialEdit.setAdapter(dataAdapter);
     }
 }

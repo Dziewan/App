@@ -28,6 +28,9 @@ public class Board {
     @JsonProperty("image")
     private Boolean image;
 
+    @JsonProperty("description")
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -74,5 +77,13 @@ public class Board {
 
     public void setImage(Boolean image) {
         this.image = image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

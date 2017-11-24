@@ -1,5 +1,6 @@
 package com.example.coderion.app.panels;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,9 +13,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.coderion.app.R;
@@ -30,6 +35,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,17 +45,17 @@ import java.util.List;
  * Created by coderion on 20.11.17.
  */
 
-public class AddBoardPanel extends AppCompatActivity implements ImageConverter {
+public class AddBoardPanel extends AppCompatActivity implements ImageConverter, AdapterView.OnItemSelectedListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Uri imageUri;
     String mCurrentPhotoPath;
-
     Validator validation;
+    ArrayAdapter<String> dataAdapter;
+    String item;
 
     Button add;
     ImageButton image;
-    EditText material;
+    Spinner material;
     EditText thickness;
     EditText size;
     EditText place;
@@ -65,6 +72,10 @@ public class AddBoardPanel extends AppCompatActivity implements ImageConverter {
         thickness = findViewById(R.id.thicknessABP);
         size = findViewById(R.id.sizeABP);
         place = findViewById(R.id.placeABP);
+
+        material.setOnItemSelectedListener(this);
+        addItemsOnSpinner();
+
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +181,7 @@ public class AddBoardPanel extends AppCompatActivity implements ImageConverter {
 
     public void addNewBoard() {
         Board plyta = new Board();
-        plyta.setMaterial(material.getText().toString());
+        plyta.setMaterial(item);
         plyta.setSize(size.getText().toString());
         plyta.setThickness(Double.valueOf(thickness.getText().toString()));
         plyta.setPlace(place.getText().toString());
@@ -189,5 +200,23 @@ public class AddBoardPanel extends AppCompatActivity implements ImageConverter {
         } else {
             Toast.makeText(this, "Nie udało się dodać płyty", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        item = adapterView.getItemAtPosition(i).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    private void addItemsOnSpinner() {
+        List<String> categories = new ArrayList<>(Arrays.asList("Tekstolit", "Gips", "Kupa"));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        material.setAdapter(dataAdapter);
     }
 }
