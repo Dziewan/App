@@ -35,7 +35,7 @@ import java.util.List;
 
 public class EditBoardPanel extends AddBoardPanel implements ImageConverter, AdapterView.OnItemSelectedListener {
 
-    List<String> categoriesEdit = new ArrayList<>(Arrays.asList("Tekstolit", "Gips", "Kupa"));
+    List<String> categoriesEdit = Values.MATERIALS;
     Button save;
     ImageButton imageEdit;
     Spinner materialEdit;

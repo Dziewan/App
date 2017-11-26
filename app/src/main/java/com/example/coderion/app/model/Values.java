@@ -1,5 +1,8 @@
 package com.example.coderion.app.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by coderion on 20.11.17.
  */
@@ -10,4 +13,5 @@ public interface Values {
     String FIND_BY_ID = "getById";
     String FIND_ALL = "getAll";
     String DELETE_BY_ID = "deleteById";
+    List<String> MATERIALS = Arrays.asList("Tekstolit", "Zielone szkło", "Brązowe szkło", "Czerwone szkło", "Delmat Epoxy", "Czarne szkło", "Żółte szkło");
 }

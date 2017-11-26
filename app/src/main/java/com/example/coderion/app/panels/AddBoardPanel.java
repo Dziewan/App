@@ -213,7 +213,7 @@ public class AddBoardPanel extends AppCompatActivity implements ImageConverter, 
     }
 
     private void addItemsOnSpinner() {
-        List<String> categories = new ArrayList<>(Arrays.asList("Tekstolit", "Gips", "Kupa"));
+        List<String> categories = Values.MATERIALS;
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
